@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Text.Json.Serialization;
+using Insurance.Api.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Insurance.Api.Controllers
@@ -33,18 +34,6 @@ namespace Insurance.Api.Controllers
             }
 
             return toInsure;
-        }
-
-        public class InsuranceDto
-        {
-            public int ProductId { get; set; }
-            public float InsuranceValue { get; set; }
-            [JsonIgnore]
-            public string ProductTypeName { get; set; }
-            [JsonIgnore]
-            public bool ProductTypeHasInsurance { get; set; }
-            [JsonIgnore]
-            public float SalesPrice { get; set; }
         }
 
         private const string ProductApi = "http://localhost:5002";

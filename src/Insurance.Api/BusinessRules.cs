@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using Insurance.Api.Controllers;
 using Newtonsoft.Json;
+using Insurance.Api.Dtos;
 
 namespace Insurance.Api
 {
     public static class BusinessRules
     {
-        public static void GetProductType(string baseAddress, int productID, ref HomeController.InsuranceDto insurance)
+        public static void GetProductType(string baseAddress, int productID, ref InsuranceDto insurance)
         {
             HttpClient client = new HttpClient{ BaseAddress = new Uri(baseAddress)};
             string json = client.GetAsync("/product_types").Result.Content.ReadAsStringAsync().Result;
@@ -23,7 +24,7 @@ namespace Insurance.Api
             string productTypeName = null;
             bool hasInsurance = false;
 
-            insurance = new HomeController.InsuranceDto();
+            insurance = new InsuranceDto();
 
             for (int i = 0; i < collection.Count; i++)
             {
@@ -35,7 +36,7 @@ namespace Insurance.Api
             }
         }
 
-        public static void GetSalesPrice(string baseAddress, int productID, ref HomeController.InsuranceDto insurance)
+        public static void GetSalesPrice(string baseAddress, int productID, ref InsuranceDto insurance)
         {
             HttpClient client = new HttpClient{ BaseAddress = new Uri(baseAddress)};
             string json = client.GetAsync(string.Format("/products/{0:G}", productID)).Result.Content.ReadAsStringAsync().Result;

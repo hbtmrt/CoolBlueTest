@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Insurance.Api.Controllers;
+using Insurance.Api.Dtos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -26,7 +27,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 500;
 
-            var dto = new HomeController.InsuranceDto
+            var dto = new InsuranceDto
             {
                 ProductId = 1,
             };
@@ -45,7 +46,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 1000;
 
-            var dto = new HomeController.InsuranceDto
+            var dto = new InsuranceDto
             {
                 ProductId = 2,
             };
@@ -64,7 +65,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 2000;
 
-            var dto = new HomeController.InsuranceDto
+            var dto = new InsuranceDto
             {
                 ProductId = 3,
             };
