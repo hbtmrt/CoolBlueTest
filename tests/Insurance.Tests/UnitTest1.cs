@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Insurance.Api.Controllers;
 using Insurance.Api.Dtos;
@@ -7,19 +8,28 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Xunit;
 
 namespace Insurance.Tests
 {
-    public class InsuranceTests: IClassFixture<ControllerTestFixture>
+    public class InsuranceTests : IClassFixture<ControllerTestFixture>
     {
         private readonly ControllerTestFixture _fixture;
+        private readonly IConfiguration _configuration;
 
         public InsuranceTests(ControllerTestFixture fixture)
         {
             _fixture = fixture;
+
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.test.json")
+                .Build();
+
+            _configuration = configuration;
         }
 
         [Fact]
@@ -31,7 +41,7 @@ namespace Insurance.Tests
             {
                 ProductId = 1,
             };
-            var sut = new HomeController();
+            var sut = new HomeController(_configuration);
 
             var result = sut.CalculateInsurance(dto);
 
@@ -50,7 +60,7 @@ namespace Insurance.Tests
             {
                 ProductId = 2,
             };
-            var sut = new HomeController();
+            var sut = new HomeController(_configuration);
 
             var result = sut.CalculateInsurance(dto);
 
@@ -70,7 +80,7 @@ namespace Insurance.Tests
                 ProductId = 3,
             };
 
-            var sut = new HomeController();
+            var sut = new HomeController(_configuration);
 
             var result = sut.CalculateInsurance(dto);
 
@@ -81,7 +91,7 @@ namespace Insurance.Tests
         }
     }
 
-    public class ControllerTestFixture: IDisposable
+    public class ControllerTestFixture : IDisposable
     {
         private readonly IHost _host;
 
@@ -159,7 +169,7 @@ namespace Insurance.Tests
                         "products/{id:int}",
                         context =>
                         {
-                            int productId = int.Parse((string) context.Request.RouteValues["id"]);
+                            int productId = int.Parse((string)context.Request.RouteValues["id"]);
                             var product = this.Products.FirstOrDefault(p => p.id == productId);
                             return context.Response.WriteAsync(JsonConvert.SerializeObject((object)product));
                         }

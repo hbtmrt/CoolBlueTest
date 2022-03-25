@@ -3,19 +3,28 @@ using System.Net.Http;
 using System.Text.Json.Serialization;
 using Insurance.Api.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace Insurance.Api.Controllers
 {
     public class HomeController: Controller
     {
+        private readonly IConfiguration configuration;
+
+        public HomeController(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
         [HttpPost]
         [Route("api/insurance/product")]
         public InsuranceDto CalculateInsurance([FromBody] InsuranceDto toInsure)
         {
             int productId = toInsure.ProductId;
+            string productApi = configuration.GetValue<string>("ProductApi");
 
-            BusinessRules.GetProductType(ProductApi, productId, ref toInsure);
-            BusinessRules.GetSalesPrice(ProductApi, productId, ref toInsure);
+            BusinessRules.GetProductType(productApi, productId, ref toInsure);
+            BusinessRules.GetSalesPrice(productApi, productId, ref toInsure);
 
             float insurance = 0f;
 
@@ -35,7 +44,5 @@ namespace Insurance.Api.Controllers
 
             return toInsure;
         }
-
-        private const string ProductApi = "http://localhost:5002";
     }
 }
