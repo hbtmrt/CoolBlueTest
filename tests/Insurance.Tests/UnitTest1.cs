@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Insurance.Api.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,14 +22,53 @@ namespace Insurance.Tests
         }
 
         [Fact]
+        public void CalculateInsurance_GivenSalesPriceLessThan500Euros_ShouldAdd500EurosToInsuranceCost()
+        {
+            const float expectedInsuranceValue = 500;
+
+            var dto = new HomeController.InsuranceDto
+            {
+                ProductId = 1,
+            };
+            var sut = new HomeController();
+
+            var result = sut.CalculateInsurance(dto);
+
+            Assert.Equal(
+                expected: expectedInsuranceValue,
+                actual: result.InsuranceValue
+            );
+        }
+
+        [Fact]
         public void CalculateInsurance_GivenSalesPriceBetween500And2000Euros_ShouldAddThousandEurosToInsuranceCost()
         {
             const float expectedInsuranceValue = 1000;
 
             var dto = new HomeController.InsuranceDto
-                      {
-                          ProductId = 1,
-                      };
+            {
+                ProductId = 2,
+            };
+            var sut = new HomeController();
+
+            var result = sut.CalculateInsurance(dto);
+
+            Assert.Equal(
+                expected: expectedInsuranceValue,
+                actual: result.InsuranceValue
+            );
+        }
+
+        [Fact]
+        public void CalculateInsurance_GivenSalesPriceAbove2000Euros_ShouldAdd2000EurosToInsuranceCost()
+        {
+            const float expectedInsuranceValue = 2000;
+
+            var dto = new HomeController.InsuranceDto
+            {
+                ProductId = 3,
+            };
+
             var sut = new HomeController();
 
             var result = sut.CalculateInsurance(dto);
@@ -60,6 +101,53 @@ namespace Insurance.Tests
 
     public class ControllerTestStartup
     {
+        public List<dynamic> Products => GetProducts();
+
+        private List<dynamic> GetProducts()
+        {
+            List<dynamic> products = new List<dynamic>
+            {
+                GenerateSaleBelow500(),
+                GenerateSaleBetween500and2000(),
+                GenerateSaleAbove2000()
+            };
+
+            return products;
+        }
+
+        private dynamic GenerateSaleAbove2000()
+        {
+            return new
+            {
+                id = 3,
+                name = "Test Product above 2000",
+                productTypeId = 1,
+                salesPrice = 2004
+            };
+        }
+
+        private dynamic GenerateSaleBetween500and2000()
+        {
+            return new
+            {
+                id = 2,
+                name = "Test Product between 500 and 2000",
+                productTypeId = 1,
+                salesPrice = 899
+            };
+        }
+
+        private dynamic GenerateSaleBelow500()
+        {
+            return new
+            {
+                id = 1,
+                name = "Test Product below 500",
+                productTypeId = 1,
+                salesPrice = 366
+            };
+        }
+
         public void Configure(IApplicationBuilder app)
         {
             app.UseRouting();
@@ -71,14 +159,8 @@ namespace Insurance.Tests
                         context =>
                         {
                             int productId = int.Parse((string) context.Request.RouteValues["id"]);
-                            var product = new
-                                          {
-                                              id = productId,
-                                              name = "Test Product",
-                                              productTypeId = 1,
-                                              salesPrice = 750
-                                          };
-                            return context.Response.WriteAsync(JsonConvert.SerializeObject(product));
+                            var product = this.Products.FirstOrDefault(p => p.id == productId);
+                            return context.Response.WriteAsync(JsonConvert.SerializeObject((object)product));
                         }
                     );
                     ep.MapGet(

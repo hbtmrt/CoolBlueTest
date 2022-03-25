@@ -19,7 +19,7 @@ namespace Insurance.Api.Controllers
             float insurance = 0f;
 
             if (toInsure.SalesPrice < 500)
-                toInsure.InsuranceValue = 0;
+                toInsure.InsuranceValue = 500;
             else
             {
                 if (toInsure.SalesPrice > 500 && toInsure.SalesPrice < 2000)
