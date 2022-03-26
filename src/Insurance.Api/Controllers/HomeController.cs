@@ -1,4 +1,3 @@
-using Insurance.Api.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 

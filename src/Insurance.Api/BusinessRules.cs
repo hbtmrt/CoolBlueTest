@@ -9,7 +9,7 @@ using Insurance.Api.Dtos;
 
 namespace Insurance.Api
 {
-    public class BusinessRules
+    public sealed class BusinessRules
     {
         public void GetProductType(string baseAddress, int productID, ref InsuranceDto insurance)
         {
@@ -25,13 +25,14 @@ namespace Insurance.Api
             bool hasInsurance = false;
 
             insurance = new InsuranceDto();
+            insurance.ProductType.Id = productTypeId;
 
             for (int i = 0; i < collection.Count; i++)
             {
                 if (collection[i].id == productTypeId && collection[i].canBeInsured == true)
                 {
-                    insurance.ProductTypeName = collection[i].name;
-                    insurance.ProductTypeHasInsurance = true;
+                    insurance.ProductType.Name = collection[i].name;
+                    insurance.ProductType.HasInsurance = true;
                 }
             }
         }
@@ -53,12 +54,12 @@ namespace Insurance.Api
             else
             {
                 if (toInsure.SalesPrice > 500 && toInsure.SalesPrice < 2000)
-                    if (toInsure.ProductTypeHasInsurance)
+                    if (toInsure.ProductType.HasInsurance)
                         toInsure.InsuranceValue += 1000;
                 if (toInsure.SalesPrice >= 2000)
-                    if (toInsure.ProductTypeHasInsurance)
+                    if (toInsure.ProductType.HasInsurance)
                         toInsure.InsuranceValue += 2000;
-                if (toInsure.ProductTypeName == "Laptops" || toInsure.ProductTypeName == "Smartphones" && toInsure.ProductTypeHasInsurance)
+                if (toInsure.ProductType.Name == "Laptops" || toInsure.ProductType.Name == "Smartphones" && toInsure.ProductType.HasInsurance)
                     toInsure.InsuranceValue += 500;
             }
 

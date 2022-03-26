@@ -2,16 +2,18 @@
 
 namespace Insurance.Api.Dtos
 {
-    public class InsuranceDto
+    public sealed class InsuranceDto
     {
+        public InsuranceDto()
+        {
+            ProductType = new ProductTypeDto();
+        }
+
         public int ProductId { get; set; }
         public float InsuranceValue { get; set; }
 
         [JsonIgnore]
-        public string ProductTypeName { get; set; }
-
-        [JsonIgnore]
-        public bool ProductTypeHasInsurance { get; set; }
+        public ProductTypeDto ProductType { get; set; }
 
         [JsonIgnore]
         public float SalesPrice { get; set; }
