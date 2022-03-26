@@ -1,13 +1,10 @@
-using System.Net;
-using System.Net.Http;
-using System.Text.Json.Serialization;
 using Insurance.Api.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
 namespace Insurance.Api.Controllers
 {
-    public class HomeController: Controller
+    public class HomeController : Controller
     {
         private readonly IConfiguration configuration;
 
@@ -16,10 +13,15 @@ namespace Insurance.Api.Controllers
             this.configuration = configuration;
         }
 
-        [HttpPost]
-        [Route("api/insurance/product")]
-        public InsuranceDto CalculateInsurance([FromBody] InsuranceDto toInsure)
+        [HttpGet]
+        [Route("api/product/{id}/insurance")]
+        public InsuranceDto CalculateInsurance(int id)
         {
+            InsuranceDto toInsure = new InsuranceDto()
+            {
+                ProductId = id
+            };
+
             int productId = toInsure.ProductId;
             string productApi = configuration.GetValue<string>("ProductApi");
 

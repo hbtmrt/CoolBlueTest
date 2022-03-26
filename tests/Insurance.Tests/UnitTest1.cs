@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Insurance.Api.Controllers;
-using Insurance.Api.Dtos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -37,13 +36,9 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 500;
 
-            var dto = new InsuranceDto
-            {
-                ProductId = 1,
-            };
-            var sut = new HomeController(_configuration);
+            HomeController homeController = new HomeController(_configuration);
 
-            var result = sut.CalculateInsurance(dto);
+            var result = homeController.CalculateInsurance(1);
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
@@ -56,13 +51,9 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 1000;
 
-            var dto = new InsuranceDto
-            {
-                ProductId = 2,
-            };
-            var sut = new HomeController(_configuration);
+            HomeController homeController = new HomeController(_configuration);
 
-            var result = sut.CalculateInsurance(dto);
+            var result = homeController.CalculateInsurance(2);
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
@@ -75,14 +66,9 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 2000;
 
-            var dto = new InsuranceDto
-            {
-                ProductId = 3,
-            };
+            HomeController homeController = new HomeController(_configuration);
 
-            var sut = new HomeController(_configuration);
-
-            var result = sut.CalculateInsurance(dto);
+            var result = homeController.CalculateInsurance(3);
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
