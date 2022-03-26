@@ -38,11 +38,11 @@ namespace Insurance.Tests
 
             HomeController homeController = new HomeController(_configuration);
 
-            var result = homeController.CalculateInsurance(1);
+            float insurance = homeController.CalculateInsurance(1);
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
-                actual: result.InsuranceValue
+                actual: insurance
             );
         }
 
@@ -53,11 +53,11 @@ namespace Insurance.Tests
 
             HomeController homeController = new HomeController(_configuration);
 
-            var result = homeController.CalculateInsurance(2);
+            float insurance = homeController.CalculateInsurance(2);
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
-                actual: result.InsuranceValue
+                actual: insurance
             );
         }
 
@@ -68,11 +68,11 @@ namespace Insurance.Tests
 
             HomeController homeController = new HomeController(_configuration);
 
-            var result = homeController.CalculateInsurance(3);
+            float insurance = homeController.CalculateInsurance(3);
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
-                actual: result.InsuranceValue
+                actual: insurance
             );
         }
     }

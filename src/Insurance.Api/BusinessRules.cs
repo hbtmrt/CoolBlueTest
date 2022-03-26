@@ -9,9 +9,9 @@ using Insurance.Api.Dtos;
 
 namespace Insurance.Api
 {
-    public static class BusinessRules
+    public class BusinessRules
     {
-        public static void GetProductType(string baseAddress, int productID, ref InsuranceDto insurance)
+        public void GetProductType(string baseAddress, int productID, ref InsuranceDto insurance)
         {
             HttpClient client = new HttpClient{ BaseAddress = new Uri(baseAddress)};
             string json = client.GetAsync("/product_types").Result.Content.ReadAsStringAsync().Result;
@@ -36,7 +36,36 @@ namespace Insurance.Api
             }
         }
 
-        public static void GetSalesPrice(string baseAddress, int productID, ref InsuranceDto insurance)
+        public float CalculateInsurance(int id, string productApi)
+        {
+            InsuranceDto toInsure = new InsuranceDto()
+            {
+                ProductId = id
+            };
+
+            GetProductType(productApi, id, ref toInsure);
+            GetSalesPrice(productApi, id, ref toInsure);
+
+            float insurance = 0f;
+
+            if (toInsure.SalesPrice < 500)
+                toInsure.InsuranceValue = 500;
+            else
+            {
+                if (toInsure.SalesPrice > 500 && toInsure.SalesPrice < 2000)
+                    if (toInsure.ProductTypeHasInsurance)
+                        toInsure.InsuranceValue += 1000;
+                if (toInsure.SalesPrice >= 2000)
+                    if (toInsure.ProductTypeHasInsurance)
+                        toInsure.InsuranceValue += 2000;
+                if (toInsure.ProductTypeName == "Laptops" || toInsure.ProductTypeName == "Smartphones" && toInsure.ProductTypeHasInsurance)
+                    toInsure.InsuranceValue += 500;
+            }
+
+            return toInsure.InsuranceValue;
+        }
+
+        public void GetSalesPrice(string baseAddress, int productID, ref InsuranceDto insurance)
         {
             HttpClient client = new HttpClient{ BaseAddress = new Uri(baseAddress)};
             string json = client.GetAsync(string.Format("/products/{0:G}", productID)).Result.Content.ReadAsStringAsync().Result;
