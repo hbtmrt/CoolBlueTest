@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Insurance.Api.Dtos;
 using Insurance.Api.Factories;
 using Insurance.Api.ProductTypeInsureCostCalculators;
 using Insurance.Api.SalePriceInsureCostCalculators;
-using Newtonsoft.Json;
+using Insurance.Api.Wrappers;
 
 namespace Insurance.Api
 {
@@ -22,7 +21,9 @@ namespace Insurance.Api
                     ProductId = id
                 };
 
-                ProductTypeDto productType = GetProductType(productApi, id);
+                HttpClientWrapper httpClientWrapper = new HttpClientWrapper(new Uri(productApi));
+
+                ProductTypeDto productType = GetProductType(httpClientWrapper, id);
                 if (!productType.HasInsurance)
                 {
                     return 0;
@@ -31,7 +32,7 @@ namespace Insurance.Api
                 IProductTypeInsureCostCalculator productTypeInsureCostCalculator = new ProductTypeInsureCostCalculatorFactory().Create(productType.Category);
                 float productTypeInsureCost = productTypeInsureCostCalculator.GetInsureCost();
 
-                float salePrice = GetSalesPrice(productApi, id);
+                float salePrice = GetSalesPrice(httpClientWrapper, id);
                 ISalePriceInsureCostCalculator salePriceInsureCostCalculator = new SalePriceInsureCostCalculatorFactory().Create(salePrice);
                 float salePriceInsureCost = salePriceInsureCostCalculator.GetInsureCost();
 
@@ -39,26 +40,18 @@ namespace Insurance.Api
             });
         }
 
-        private float GetSalesPrice(string baseAddress, int productID)
+        private float GetSalesPrice(HttpClientWrapper httpClientWrapper, int productID)
         {
-            HttpClient client = new HttpClient { BaseAddress = new Uri(baseAddress) };
-            string json = client.GetAsync(string.Format("/products/{0:G}", productID)).Result.Content.ReadAsStringAsync().Result;
-            var product = JsonConvert.DeserializeObject<dynamic>(json);
-
+            var product = httpClientWrapper.Get<dynamic>(string.Format("/products/{0:G}", productID));
             return product.salesPrice;
         }
 
-        private ProductTypeDto GetProductType(string baseAddress, int productID)
+        private ProductTypeDto GetProductType(HttpClientWrapper httpClientWrapper, int productID)
         {
-            HttpClient client = new HttpClient { BaseAddress = new Uri(baseAddress) };
-            string json = client.GetAsync("/product_types").Result.Content.ReadAsStringAsync().Result;
-            var collection = JsonConvert.DeserializeObject<List<ProductTypeDto>>(json);
-
-            json = client.GetAsync(string.Format("/products/{0:G}", productID)).Result.Content.ReadAsStringAsync().Result;
-            var product = JsonConvert.DeserializeObject<dynamic>(json);
+            List<ProductTypeDto> collection = httpClientWrapper.Get<List<ProductTypeDto>>("/product_types");
+            var product = httpClientWrapper.Get<dynamic>(string.Format("/products/{0:G}", productID));
 
             int productTypeId = product.productTypeId;
-
             ProductTypeDto productType = collection.FirstOrDefault(c => c.Id == productTypeId && c.HasInsurance);
 
             return productType;
