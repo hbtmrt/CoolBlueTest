@@ -171,6 +171,18 @@ namespace Insurance.Tests
                                                        id = 1,
                                                        name = "Test type",
                                                        canBeInsured = true
+                                                   },
+                                                   new
+                                                   {
+                                                       id = 2,
+                                                       name = "Laptops",
+                                                       canBeInsured = true
+                                                   },
+                                                   new
+                                                   {
+                                                       id = 3,
+                                                       name = "Smartphones",
+                                                       canBeInsured = true
                                                    }
                                                };
                             return context.Response.WriteAsync(JsonConvert.SerializeObject(productTypes));

@@ -21,8 +21,8 @@ namespace Insurance.Api.Dtos
 
             return Name switch
             {
-                Constants.ProductTypeNames.Laptops => ProductCategory.Laptops,
-                Constants.ProductTypeNames.Smartphones => ProductCategory.Smartphones,
+                Constants.ProductTypeName.Laptops => ProductCategory.Laptops,
+                Constants.ProductTypeName.Smartphones => ProductCategory.Smartphones,
                 _ => ProductCategory.Other
             };
         }

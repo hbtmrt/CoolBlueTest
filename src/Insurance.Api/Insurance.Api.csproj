@@ -11,8 +11,4 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Insurance.Core\Insurance.Core.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Factories\" />
-  </ItemGroup>
 </Project>
