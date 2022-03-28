@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -14,10 +15,10 @@ namespace Insurance.Api.Controllers
 
         [HttpGet]
         [Route("api/product/{id}/insurance")]
-        public float CalculateInsurance(int id)
+        public async Task<float> CalculateInsuranceAsync(int id)
         {
             string productApi = configuration.GetValue<string>("ProductApi");
-            return new BusinessRules().CalculateInsurance(id, productApi);
+            return await new BusinessRules().CalculateInsuranceAsync(id, productApi);
         }
     }
 }

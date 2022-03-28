@@ -38,7 +38,7 @@ namespace Insurance.Tests
 
             HomeController homeController = new HomeController(_configuration);
 
-            float insurance = homeController.CalculateInsurance(1);
+            float insurance = homeController.CalculateInsuranceAsync(1).Result;
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
@@ -53,7 +53,7 @@ namespace Insurance.Tests
 
             HomeController homeController = new HomeController(_configuration);
 
-            float insurance = homeController.CalculateInsurance(2);
+            float insurance = homeController.CalculateInsuranceAsync(2).Result;
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
@@ -68,7 +68,7 @@ namespace Insurance.Tests
 
             HomeController homeController = new HomeController(_configuration);
 
-            float insurance = homeController.CalculateInsurance(3);
+            float insurance = homeController.CalculateInsuranceAsync(3).Result;
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
