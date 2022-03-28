@@ -1,6 +1,9 @@
 using System.IO;
 using Insurance.Api.Controllers;
+using log4net.Config;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace Insurance.Tests
@@ -9,25 +12,22 @@ namespace Insurance.Tests
     {
         private readonly ControllerTestFixture _fixture;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<HomeController> _logger;
 
         public InsuranceTests(ControllerTestFixture fixture)
         {
             _fixture = fixture;
-
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.test.json")
-                .Build();
-
-            _configuration = configuration;
+            _configuration = CreateConfiguration();
+            _logger = CreateMockLogger();
         }
 
         [Fact]
         public void CalculateInsurance_GivenSalesPriceLessThan500Euros_ShouldAdd500EurosToInsuranceCost()
         {
+            _logger.LogInformation($"Test test");
             const float expectedInsuranceValue = 500;
 
-            HomeController homeController = new HomeController(_configuration);
+            HomeController homeController = new HomeController(_configuration, _logger);
 
             float insurance = homeController.CalculateInsuranceAsync(1).Result;
 
@@ -42,7 +42,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 1000;
 
-            HomeController homeController = new HomeController(_configuration);
+            HomeController homeController = new HomeController(_configuration, _logger);
 
             float insurance = homeController.CalculateInsuranceAsync(2).Result;
 
@@ -57,7 +57,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 2000;
 
-            HomeController homeController = new HomeController(_configuration);
+            HomeController homeController = new HomeController(_configuration, _logger);
 
             float insurance = homeController.CalculateInsuranceAsync(3).Result;
 
@@ -72,7 +72,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 1000;
 
-            HomeController homeController = new HomeController(_configuration);
+            HomeController homeController = new HomeController(_configuration, _logger);
 
             float insurance = homeController.CalculateInsuranceAsync(4).Result;
 
@@ -87,7 +87,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 1500;
 
-            HomeController homeController = new HomeController(_configuration);
+            HomeController homeController = new HomeController(_configuration, _logger);
 
             float insurance = homeController.CalculateInsuranceAsync(5).Result;
 
@@ -102,7 +102,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 2500;
 
-            HomeController homeController = new HomeController(_configuration);
+            HomeController homeController = new HomeController(_configuration, _logger);
 
             float insurance = homeController.CalculateInsuranceAsync(6).Result;
 
@@ -110,6 +110,28 @@ namespace Insurance.Tests
                 expected: expectedInsuranceValue,
                 actual: insurance
             );
+        }
+
+        private ILogger<HomeController> CreateMockLogger()
+        {
+            XmlConfigurator.Configure(new FileInfo("log4net.config"));
+            ServiceProvider serviceProvider = new ServiceCollection()
+                .AddLogging()
+                .BuildServiceProvider();
+
+            ILoggerFactory factory = serviceProvider.GetService<ILoggerFactory>();
+
+            return factory.CreateLogger<HomeController>();
+        }
+
+        private IConfiguration CreateConfiguration()
+        {
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.test.json")
+                .Build();
+
+            return configuration;
         }
     }
 }
