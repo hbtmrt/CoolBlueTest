@@ -1,7 +1,7 @@
-using System;
-using System.Net.Http;
 using System.Threading.Tasks;
+using Insurance.Api.Resources;
 using Insurance.Core.CustomExceptions;
+using Insurance.Core.Statics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -31,23 +31,23 @@ namespace Insurance.Api.Controllers
         {
             try
             {
-                logger.LogInformation($"Received request to calculate insurance for the product id: {id}");
-                string productApi = configuration.GetValue<string>("ProductApi");
+                logger.LogInformation(string.Format(Resource.CalculateInsuranceRequestReceived, id));
+                string productApi = configuration.GetValue<string>(Constants.ProductApiText);
 
                 float insureCost = await new BusinessRules().CalculateInsuranceAsync(id, productApi);
-                logger.LogInformation($"The insure cost is : {insureCost}");
+                logger.LogInformation(string.Format(Resource.InsureCostText, insureCost));
                 return insureCost;
             }
             catch (ProductTypeNotFoundException ex)
             {
-                string message = $"The product type cannot be found for the product id: {id}, for more information:{ex.Message}";
+                string message = string.Format(Resource.ProductTypeNotFound, id, ex.Message);
                 logger.LogError(message);
 
                 return unsuccessfulResult;
             }
             catch (InsuranceServerNotFoundException)
             {
-                string message = $"The insurance api cannot be found.";
+                string message = string.Format(Resource.ApiNotFound);
                 logger.LogError(message);
 
                 return unsuccessfulResult;

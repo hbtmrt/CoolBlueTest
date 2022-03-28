@@ -8,6 +8,7 @@ using Insurance.Api.ProductTypeInsureCostCalculators;
 using Insurance.Api.SalePriceInsureCostCalculators;
 using Insurance.Api.Wrappers;
 using Insurance.Core.CustomExceptions;
+using Insurance.Core.Statics;
 
 namespace Insurance.Api
 {
@@ -40,7 +41,7 @@ namespace Insurance.Api
         {
             try
             {
-                var product = httpClientWrapper.Get<dynamic>(string.Format("/products/{0:G}", productID));
+                var product = httpClientWrapper.Get<dynamic>(string.Format(Constants.ApiPath.Product, productID));
                 return product.salesPrice;
             }
             catch (AggregateException ex)
@@ -53,8 +54,8 @@ namespace Insurance.Api
         {
             try
             {
-                List<ProductTypeDto> collection = httpClientWrapper.Get<List<ProductTypeDto>>("/product_types");
-                var product = httpClientWrapper.Get<dynamic>(string.Format("/products/{0:G}", productID));
+                List<ProductTypeDto> collection = httpClientWrapper.Get<List<ProductTypeDto>>(Constants.ApiPath.ProductType);
+                var product = httpClientWrapper.Get<dynamic>(string.Format(Constants.ApiPath.Product, productID));
 
                 int productTypeId = product.productTypeId;
                 try

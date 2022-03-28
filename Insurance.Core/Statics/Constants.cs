@@ -2,6 +2,14 @@
 {
     public static class Constants
     {
+        public const string ProductApiText = "ProductApi";
+
+        public static class ApiPath
+        {
+            public const string ProductType = "/product_types";
+            public const string Product = "/products/{0:G}";
+        }
+
         public static class ProductTypeName
         {
             public const string Laptops = "Laptops";
