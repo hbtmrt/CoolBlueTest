@@ -75,6 +75,36 @@ namespace Insurance.Tests
                 actual: insurance
             );
         }
+
+        [Fact]
+        public void CalculateInsurance_GivenSalesPriceLessThan500Euros_AndTypeOfLaptop_ShouldAdd1000EurosToInsuranceCost()
+        {
+            const float expectedInsuranceValue = 1000;
+
+            HomeController homeController = new HomeController(_configuration);
+
+            float insurance = homeController.CalculateInsuranceAsync(4).Result;
+
+            Assert.Equal(
+                expected: expectedInsuranceValue,
+                actual: insurance
+            );
+        }
+
+        [Fact]
+        public void CalculateInsurance_GivenSalesPriceBetween500And2000Euros_AndTypeOfSmartphone_ShouldAdd1500EurosToInsuranceCost()
+        {
+            const float expectedInsuranceValue = 1500;
+
+            HomeController homeController = new HomeController(_configuration);
+
+            float insurance = homeController.CalculateInsuranceAsync(5).Result;
+
+            Assert.Equal(
+                expected: expectedInsuranceValue,
+                actual: insurance
+            );
+        }
     }
 
     public class ControllerTestFixture : IDisposable
@@ -106,7 +136,9 @@ namespace Insurance.Tests
             {
                 GenerateSaleBelow500(),
                 GenerateSaleBetween500and2000(),
-                GenerateSaleAbove2000()
+                GenerateSaleAbove2000(),
+                GenerateSaleBelow500AndTypeOfLaptop(),
+                GenerateSaleBetween500and2000AndTypeOfSmartphone(),
             };
 
             return products;
@@ -142,6 +174,28 @@ namespace Insurance.Tests
                 name = "Test Product below 500",
                 productTypeId = 1,
                 salesPrice = 366
+            };
+        }
+
+        private dynamic GenerateSaleBelow500AndTypeOfLaptop()
+        {
+            return new
+            {
+                id = 4,
+                name = "Test Product below 500 and type of laptop",
+                productTypeId = 2,
+                salesPrice = 400
+            };
+        }
+
+        private dynamic GenerateSaleBetween500and2000AndTypeOfSmartphone()
+        {
+            return new
+            {
+                id = 5,
+                name = "Test Product between 500 and 2000 and type of smartphone",
+                productTypeId = 3,
+                salesPrice = 1345
             };
         }
 
