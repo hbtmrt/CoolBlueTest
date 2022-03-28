@@ -7,6 +7,7 @@ using Insurance.Api.Factories;
 using Insurance.Api.ProductTypeInsureCostCalculators;
 using Insurance.Api.SalePriceInsureCostCalculators;
 using Insurance.Api.Wrappers;
+using Insurance.Core.CustomExceptions;
 
 namespace Insurance.Api
 {
@@ -16,11 +17,6 @@ namespace Insurance.Api
         {
             return await Task.Run(() =>
             {
-                InsuranceDto toInsure = new InsuranceDto()
-                {
-                    ProductId = id
-                };
-
                 HttpClientWrapper httpClientWrapper = new HttpClientWrapper(new Uri(productApi));
 
                 ProductTypeDto productType = GetProductType(httpClientWrapper, id);
@@ -42,19 +38,40 @@ namespace Insurance.Api
 
         private float GetSalesPrice(HttpClientWrapper httpClientWrapper, int productID)
         {
-            var product = httpClientWrapper.Get<dynamic>(string.Format("/products/{0:G}", productID));
-            return product.salesPrice;
+            try
+            {
+                var product = httpClientWrapper.Get<dynamic>(string.Format("/products/{0:G}", productID));
+                return product.salesPrice;
+            }
+            catch (AggregateException ex)
+            {
+                throw new InsuranceServerNotFoundException(ex.Message);
+            }
         }
 
         private ProductTypeDto GetProductType(HttpClientWrapper httpClientWrapper, int productID)
         {
-            List<ProductTypeDto> collection = httpClientWrapper.Get<List<ProductTypeDto>>("/product_types");
-            var product = httpClientWrapper.Get<dynamic>(string.Format("/products/{0:G}", productID));
+            try
+            {
+                List<ProductTypeDto> collection = httpClientWrapper.Get<List<ProductTypeDto>>("/product_types");
+                var product = httpClientWrapper.Get<dynamic>(string.Format("/products/{0:G}", productID));
 
-            int productTypeId = product.productTypeId;
-            ProductTypeDto productType = collection.FirstOrDefault(c => c.Id == productTypeId && c.HasInsurance);
+                int productTypeId = product.productTypeId;
+                try
+                {
+                    ProductTypeDto productType = collection.Single(c => c.Id == productTypeId && c.HasInsurance);
 
-            return productType;
+                    return productType;
+                }
+                catch (Exception ex)
+                {
+                    throw new ProductTypeNotFoundException(ex.Message);
+                }
+            }
+            catch (AggregateException ex)
+            {
+                throw new InsuranceServerNotFoundException(ex.Message);
+            }
         }
     }
 }
