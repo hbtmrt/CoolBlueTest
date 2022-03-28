@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Insurance.Core.Enums;
+using Insurance.Core.Statics;
+using Newtonsoft.Json;
 
 namespace Insurance.Api.Dtos
 {
@@ -9,6 +8,23 @@ namespace Insurance.Api.Dtos
     {
         public int Id { get; set; }
         public string Name { get; set; }
+
+        [JsonProperty("canBeInsured")]
         public bool HasInsurance { get; set; }
+
+        public ProductCategory Category => GetProductCategory();
+
+        private ProductCategory GetProductCategory()
+        {
+            // I feel like bad about following since if a new type is added, this file has to be touch and modified.
+            // but since the change is minimal, I will keep this for the moment.
+
+            return Name switch
+            {
+                Constants.ProductTypeNames.Laptops => ProductCategory.Laptops,
+                Constants.ProductTypeNames.Smartphones => ProductCategory.Smartphones,
+                _ => ProductCategory.Other
+            };
+        }
     }
 }

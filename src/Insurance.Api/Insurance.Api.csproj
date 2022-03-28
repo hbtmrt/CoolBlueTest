@@ -7,4 +7,8 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Insurance.Core\Insurance.Core.csproj" />
+  </ItemGroup>
 </Project>
