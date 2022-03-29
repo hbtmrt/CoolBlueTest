@@ -24,12 +24,11 @@ namespace Insurance.Tests
                 GenerateSaleAbove2000AndTypeOfLaptop(),
                 GenerateWithInvalidProductType(),
                 GenerateWithDigitalCameraProductType(),
+                GenerateWithSurchargeProductType(),
             };
 
             return products;
         }
-
-
 
         private dynamic GenerateSaleBelow500()
         {
@@ -119,6 +118,17 @@ namespace Insurance.Tests
             };
         }
 
+        private dynamic GenerateWithSurchargeProductType()
+        {
+            return new
+            {
+                id = 9,
+                name = "Test Product with product type of surcharge..",
+                productTypeId = 10,
+                salesPrice = 344
+            };
+        }
+
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddLog4Net("log4net.config");
@@ -163,6 +173,12 @@ namespace Insurance.Tests
                                                    {
                                                        id = 4,
                                                        name = "DigitalCameras",
+                                                       canBeInsured = true
+                                                   },
+                                                   new
+                                                   {
+                                                       id = 10,
+                                                       name = "with surcharge",
                                                        canBeInsured = true
                                                    }
                                                };

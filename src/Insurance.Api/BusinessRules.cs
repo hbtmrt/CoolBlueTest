@@ -20,7 +20,7 @@ namespace Insurance.Api
         private readonly HashSet<ProductTypeDto> productTypes = new HashSet<ProductTypeDto>();
         private readonly object syncObject = new object();
         private readonly HashSet<ISpecialInsuranceType> SpecialInsurances = new HashSet<ISpecialInsuranceType>();
-        private HashSet<ProductTypeDto> productTypeSurcharges = new HashSet<ProductTypeDto>();
+        private List<ProductTypeDto> productTypeSurcharges = new List<ProductTypeDto>();
         private readonly FileStorageHelper fileStorageHelper = new FileStorageHelper(Constants.SurchargeProductTypesStorageFilePath);
 
         public BusinessRules()
@@ -52,7 +52,7 @@ namespace Insurance.Api
                 ISalePriceInsureCostCalculator salePriceInsureCostCalculator = new SalePriceInsureCostCalculatorFactory().Create(salePrice);
                 float salePriceInsureCost = salePriceInsureCostCalculator.GetInsureCost();
 
-                return productTypeInsureCost + salePriceInsureCost;
+                return productTypeInsureCost + salePriceInsureCost + GetSurcharge(productType);
             });
         }
 
@@ -61,13 +61,17 @@ namespace Insurance.Api
             ProductTypeDto productType = new ProductTypeDto
             {
                 Id = request.Id,
-                Name = request.Name,
                 Surcharge = request.Surcharge,
-                HasInsurance = request.HasInsurance
             };
 
-            productTypeSurcharges.Add(productType);
-            fileStorageHelper.Save(productTypeSurcharges);
+            lock (syncObject)
+            {
+                if (!productTypeSurcharges.Any(ps => ps.Id == request.Id))
+                {
+                    productTypeSurcharges.Add(productType);
+                    fileStorageHelper.Save(productTypeSurcharges);
+                }
+            }
 
             return productType;
         }
@@ -171,12 +175,24 @@ namespace Insurance.Api
         private void LoadProductTypeSurcharges()
         {
             productTypeSurcharges.Clear();
-            HashSet<ProductTypeDto> result = fileStorageHelper.Read<HashSet<ProductTypeDto>>();
+            List<ProductTypeDto> result = fileStorageHelper.Read<List<ProductTypeDto>>();
 
             if (result != null)
             {
                 productTypeSurcharges = result;
             }
+        }
+
+        private float GetSurcharge(ProductTypeDto productType)
+        {
+            if (this.productTypeSurcharges.Count > 0)
+            {
+                ProductTypeDto dto = this.productTypeSurcharges.FirstOrDefault(d => d.Id == productType.Id);
+
+                return dto?.Surcharge ?? 0;
+            }
+
+            return 0;
         }
     }
 }

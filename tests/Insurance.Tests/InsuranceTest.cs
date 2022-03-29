@@ -227,8 +227,6 @@ namespace Insurance.Tests
             var request = new AddProductTypeRequest()
             {
                 Id = 10,
-                HasInsurance = true,
-                Name = "Admin added type",
                 Surcharge = 100
             };
 
@@ -240,6 +238,23 @@ namespace Insurance.Tests
             Assert.Equal(
                 expected: expectedProductType.Id,
                 actual: ((ProductTypeDto)(result as OkObjectResult).Value).Id
+            );
+        }
+
+        [Fact]
+        public void CalculateInsurance_Given_ProductyTypeSurcharge_ShouldAdd600EurosToInsuranceCost()
+        {
+            AddProductTypeSurcharge_ShouldWriteToFileAsync();
+
+            const float expectedInsuranceValue = 600;
+
+            ProductsController productsController = new ProductsController(_configuration, productsLogger);
+
+            float insurance = productsController.CalculateInsuranceAsync(9).Result;
+
+            Assert.Equal(
+                expected: expectedInsuranceValue,
+                actual: insurance
             );
         }
 
