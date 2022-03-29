@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.IO;
 using Insurance.Api.Controllers;
+using Insurance.Api.Dtos;
 using log4net.Config;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -105,6 +107,27 @@ namespace Insurance.Tests
             HomeController homeController = new HomeController(_configuration, _logger);
 
             float insurance = homeController.CalculateInsuranceAsync(6).Result;
+
+            Assert.Equal(
+                expected: expectedInsuranceValue,
+                actual: insurance
+            );
+        }
+
+        [Fact]
+        public void CalculateInsuranceForOder_ShouldAdd4000EurosToInsuranceCost()
+        {
+            const float expectedInsuranceValue = 3000;
+
+            HomeController homeController = new HomeController(_configuration, _logger);
+
+            var order = new OrderDto()
+            {
+                Id = 1,
+                ProductIds = new List<int> { 1, 2, 5 }
+            };
+
+            float insurance = homeController.CalculateInsuranceForOrderAsync(order.Id, order).Result;
 
             Assert.Equal(
                 expected: expectedInsuranceValue,

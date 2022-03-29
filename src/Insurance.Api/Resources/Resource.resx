@@ -120,6 +120,9 @@
   <data name="ApiNotFound" xml:space="preserve">
     <value>"The insurance API cannot be found."</value>
   </data>
+  <data name="CalculateInsuranceRequestForOrderReceived" xml:space="preserve">
+    <value>"Received request to calculate insurance for the order id: {0}"</value>
+  </data>
   <data name="CalculateInsuranceRequestReceived" xml:space="preserve">
     <value>"Received request to calculate insurance for the product id: {0}"</value>
   </data>
@@ -127,6 +130,6 @@
     <value>"The insure cost is {0}"</value>
   </data>
   <data name="ProductTypeNotFound" xml:space="preserve">
-    <value>"The product type cannot be found for the product id: {0}, for more information:{1}"</value>
+    <value>"Received request to calculate insurance for the order id: {0}"</value>
   </data>
 </root>

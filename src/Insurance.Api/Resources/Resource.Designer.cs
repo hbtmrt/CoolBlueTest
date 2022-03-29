@@ -70,6 +70,15 @@ namespace Insurance.Api.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &quot;Received request to calculate insurance for the order id: {0}&quot;.
+        /// </summary>
+        public static string CalculateInsuranceRequestForOrderReceived {
+            get {
+                return ResourceManager.GetString("CalculateInsuranceRequestForOrderReceived", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &quot;Received request to calculate insurance for the product id: {0}&quot;.
         /// </summary>
         public static string CalculateInsuranceRequestReceived {
@@ -88,7 +97,7 @@ namespace Insurance.Api.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &quot;The product type cannot be found for the product id: {0}, for more information:{1}&quot;.
+        ///   Looks up a localized string similar to &quot;Received request to calculate insurance for the order id: {0}&quot;.
         /// </summary>
         public static string ProductTypeNotFound {
             get {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -27,14 +26,14 @@ namespace Insurance.Tests
             return products;
         }
 
-        private dynamic GenerateSaleAbove2000()
+        private dynamic GenerateSaleBelow500()
         {
             return new
             {
-                id = 3,
-                name = "Test Product above 2000",
+                id = 1,
+                name = "Test Product below 500",
                 productTypeId = 1,
-                salesPrice = 2004
+                salesPrice = 366
             };
         }
 
@@ -49,14 +48,14 @@ namespace Insurance.Tests
             };
         }
 
-        private dynamic GenerateSaleBelow500()
+        private dynamic GenerateSaleAbove2000()
         {
             return new
             {
-                id = 1,
-                name = "Test Product below 500",
+                id = 3,
+                name = "Test Product above 2000",
                 productTypeId = 1,
-                salesPrice = 366
+                salesPrice = 2004
             };
         }
 

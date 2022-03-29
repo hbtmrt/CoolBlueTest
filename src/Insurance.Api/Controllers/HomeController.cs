@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Insurance.Api.Dtos;
 using Insurance.Api.Resources;
 using Insurance.Core.CustomExceptions;
 using Insurance.Core.Statics;
@@ -23,8 +24,7 @@ namespace Insurance.Api.Controllers
             this.logger = logger;
         }
 
-        [HttpGet]
-        [Route("api/product/{id}/insurance")]
+        [HttpGet("api/product/{id}/insurance")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(float))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<float> CalculateInsuranceAsync(int id)
@@ -35,6 +35,41 @@ namespace Insurance.Api.Controllers
                 string productApi = configuration.GetValue<string>(Constants.ProductApiText);
 
                 float insureCost = await new BusinessRules().CalculateInsuranceAsync(id, productApi);
+                logger.LogInformation(string.Format(Resource.InsureCostText, insureCost));
+                return insureCost;
+            }
+            catch (ProductTypeNotFoundException ex)
+            {
+                string message = string.Format(Resource.ProductTypeNotFound, id, ex.Message);
+                logger.LogError(message);
+
+                return unsuccessfulResult;
+            }
+            catch (InsuranceServerNotFoundException)
+            {
+                string message = string.Format(Resource.ApiNotFound);
+                logger.LogError(message);
+
+                return unsuccessfulResult;
+            }
+        }
+
+        [HttpPost("api/orders/{id}/insurance")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(float))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<float> CalculateInsuranceForOrderAsync(int id, [FromBody] OrderDto order)
+        {
+            if (!ModelState.IsValid)
+            {
+                return unsuccessfulResult;
+            }
+
+            try
+            {
+                logger.LogInformation(string.Format(Resource.CalculateInsuranceRequestForOrderReceived, id));
+                string productApi = configuration.GetValue<string>(Constants.ProductApiText);
+
+                float insureCost = await new BusinessRules().CalculateInsuranceForOrderAsync(order, productApi);
                 logger.LogInformation(string.Format(Resource.InsureCostText, insureCost));
                 return insureCost;
             }
