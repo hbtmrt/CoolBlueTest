@@ -32,6 +32,8 @@ namespace Insurance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<float> CalculateInsuranceForOrderAsync(int id, [FromBody] OrderDto order)
         {
+            logger.LogInformation(string.Format(Resource.CalculateInsuranceRequestForOrderReceived, id));
+
             if (!ModelState.IsValid || order.ProductIds == null || !order.ProductIds.Any())
             {
                 return unsuccessfulResult;
@@ -39,7 +41,6 @@ namespace Insurance.Api.Controllers
 
             try
             {
-                logger.LogInformation(string.Format(Resource.CalculateInsuranceRequestForOrderReceived, id));
                 string productApi = configuration.GetValue<string>(Constants.ProductApiText);
 
                 float insureCost = await new BusinessRules().CalculateInsuranceForOrderAsync(order, productApi);

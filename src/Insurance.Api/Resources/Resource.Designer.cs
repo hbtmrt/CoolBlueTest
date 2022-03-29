@@ -61,6 +61,15 @@ namespace Insurance.Api.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &quot;Add product type request received.&quot;.
+        /// </summary>
+        public static string AddProductTypeRequestReceived {
+            get {
+                return ResourceManager.GetString("AddProductTypeRequestReceived", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &quot;The insurance API cannot be found.&quot;.
         /// </summary>
         public static string ApiNotFound {
@@ -88,6 +97,15 @@ namespace Insurance.Api.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &quot;Error on adding product type.&quot;.
+        /// </summary>
+        public static string ErrorOnAddingProductType {
+            get {
+                return ResourceManager.GetString("ErrorOnAddingProductType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &quot;The insure cost is {0}&quot;.
         /// </summary>
         public static string InsureCostText {
@@ -102,6 +120,15 @@ namespace Insurance.Api.Resources {
         public static string ProductNotFound {
             get {
                 return ResourceManager.GetString("ProductNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;The product type has been added successfully.&quot;.
+        /// </summary>
+        public static string ProductTypeAddedSuccessfully {
+            get {
+                return ResourceManager.GetString("ProductTypeAddedSuccessfully", resourceCulture);
             }
         }
         

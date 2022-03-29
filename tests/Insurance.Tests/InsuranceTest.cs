@@ -3,6 +3,7 @@ using System.IO;
 using Insurance.Api.Controllers;
 using Insurance.Api.Dtos;
 using log4net.Config;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -16,6 +17,7 @@ namespace Insurance.Tests
         private readonly IConfiguration _configuration;
         private readonly ILogger<ProductsController> productsLogger;
         private readonly ILogger<OrdersController> ordersLogger;
+        private readonly ILogger<ProductTypesController> productTypesLogger;
 
         public InsuranceTests(ControllerTestFixture fixture)
         {
@@ -23,6 +25,7 @@ namespace Insurance.Tests
             _configuration = CreateConfiguration();
             productsLogger = CreateMockLogger<ProductsController>();
             ordersLogger = CreateMockLogger<OrdersController>();
+            productTypesLogger = CreateMockLogger<ProductTypesController>();
         }
 
         [Fact]
@@ -30,9 +33,9 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 500;
 
-            ProductsController homeController = new ProductsController(_configuration, productsLogger);
+            ProductsController productsController = new ProductsController(_configuration, productsLogger);
 
-            float insurance = homeController.CalculateInsuranceAsync(1).Result;
+            float insurance = productsController.CalculateInsuranceAsync(1).Result;
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
@@ -45,9 +48,9 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 1000;
 
-            ProductsController homeController = new ProductsController(_configuration, productsLogger);
+            ProductsController productsController = new ProductsController(_configuration, productsLogger);
 
-            float insurance = homeController.CalculateInsuranceAsync(2).Result;
+            float insurance = productsController.CalculateInsuranceAsync(2).Result;
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
@@ -60,9 +63,9 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 2000;
 
-            ProductsController homeController = new ProductsController(_configuration, productsLogger);
+            ProductsController productsController = new ProductsController(_configuration, productsLogger);
 
-            float insurance = homeController.CalculateInsuranceAsync(3).Result;
+            float insurance = productsController.CalculateInsuranceAsync(3).Result;
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
@@ -75,9 +78,9 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 1000;
 
-            ProductsController homeController = new ProductsController(_configuration, productsLogger);
+            ProductsController productsController = new ProductsController(_configuration, productsLogger);
 
-            float insurance = homeController.CalculateInsuranceAsync(4).Result;
+            float insurance = productsController.CalculateInsuranceAsync(4).Result;
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
@@ -90,9 +93,9 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 1500;
 
-            ProductsController homeController = new ProductsController(_configuration, productsLogger);
+            ProductsController productsController = new ProductsController(_configuration, productsLogger);
 
-            float insurance = homeController.CalculateInsuranceAsync(5).Result;
+            float insurance = productsController.CalculateInsuranceAsync(5).Result;
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
@@ -105,9 +108,9 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 2500;
 
-            ProductsController homeController = new ProductsController(_configuration, productsLogger);
+            ProductsController productsController = new ProductsController(_configuration, productsLogger);
 
-            float insurance = homeController.CalculateInsuranceAsync(6).Result;
+            float insurance = productsController.CalculateInsuranceAsync(6).Result;
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
@@ -120,7 +123,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 3000;
 
-            OrdersController homeController = new OrdersController(_configuration, ordersLogger);
+            OrdersController ordersController = new OrdersController(_configuration, ordersLogger);
 
             var order = new OrderDto()
             {
@@ -128,7 +131,7 @@ namespace Insurance.Tests
                 ProductIds = new List<int> { 1, 2, 5 }
             };
 
-            float insurance = homeController.CalculateInsuranceForOrderAsync(order.Id, order).Result;
+            float insurance = ordersController.CalculateInsuranceForOrderAsync(order.Id, order).Result;
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
@@ -141,7 +144,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = -1;
 
-            OrdersController homeController = new OrdersController(_configuration, ordersLogger);
+            OrdersController ordersController = new OrdersController(_configuration, ordersLogger);
 
             var order = new OrderDto()
             {
@@ -149,7 +152,7 @@ namespace Insurance.Tests
                 ProductIds = new List<int>()
             };
 
-            float insurance = homeController.CalculateInsuranceForOrderAsync(order.Id, order).Result;
+            float insurance = ordersController.CalculateInsuranceForOrderAsync(order.Id, order).Result;
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
@@ -162,9 +165,9 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = -1;
 
-            ProductsController homeController = new ProductsController(_configuration, productsLogger);
+            ProductsController productsController = new ProductsController(_configuration, productsLogger);
 
-            float insurance = homeController.CalculateInsuranceAsync(1000).Result;
+            float insurance = productsController.CalculateInsuranceAsync(1000).Result;
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
@@ -177,9 +180,9 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = -1;
 
-            ProductsController homeController = new ProductsController(_configuration, productsLogger);
+            ProductsController productsController = new ProductsController(_configuration, productsLogger);
 
-            float insurance = homeController.CalculateInsuranceAsync(1000).Result;
+            float insurance = productsController.CalculateInsuranceAsync(1000).Result;
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
@@ -192,7 +195,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 4000;
 
-            OrdersController homeController = new OrdersController(_configuration, ordersLogger);
+            OrdersController ordersController = new OrdersController(_configuration, ordersLogger);
 
             var order = new OrderDto()
             {
@@ -200,11 +203,43 @@ namespace Insurance.Tests
                 ProductIds = new List<int> { 1, 2, 8 }
             };
 
-            float insurance = homeController.CalculateInsuranceForOrderAsync(order.Id, order).Result;
+            float insurance = ordersController.CalculateInsuranceForOrderAsync(order.Id, order).Result;
 
             Assert.Equal(
                 expected: expectedInsuranceValue,
                 actual: insurance
+            );
+        }
+
+        [Fact]
+        public void AddProductTypeSurcharge_ShouldWriteToFileAsync()
+        {
+            ProductTypeDto expectedProductType = new ProductTypeDto
+            {
+                Id = 10,
+                HasInsurance = true,
+                Name = "Admin added type",
+                Surcharge = 100
+            };
+
+            ProductTypesController productTypesController = new ProductTypesController(productTypesLogger);
+
+            var request = new AddProductTypeRequest()
+            {
+                Id = 10,
+                HasInsurance = true,
+                Name = "Admin added type",
+                Surcharge = 100
+            };
+
+            IActionResult result = productTypesController.AddProductTypeAsync(request).Result;
+
+            Assert.NotNull(result);
+            Assert.True(result is OkObjectResult);
+
+            Assert.Equal(
+                expected: expectedProductType.Id,
+                actual: ((ProductTypeDto)(result as OkObjectResult).Value).Id
             );
         }
 

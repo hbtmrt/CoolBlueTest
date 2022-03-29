@@ -3,6 +3,7 @@
     public static class Constants
     {
         public const string ProductApiText = "ProductApi";
+        public const string SurchargeProductTypesStorageFilePath = "ProductTypeSurcharge.json";
 
         public static class ApiPath
         {

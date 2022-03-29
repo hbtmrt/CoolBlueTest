@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Insurance.Api.Dtos;
 using Insurance.Api.Factories;
+using Insurance.Api.Helpers;
 using Insurance.Api.ProductTypeInsureCostCalculators;
 using Insurance.Api.SalePriceInsureCostCalculators;
 using Insurance.Api.SpecialInsuranceTypes;
@@ -18,12 +19,16 @@ namespace Insurance.Api
     {
         private readonly HashSet<ProductTypeDto> productTypes = new HashSet<ProductTypeDto>();
         private readonly object syncObject = new object();
-        public HashSet<ISpecialInsuranceType> SpecialInsurances { get; set; } = new HashSet<ISpecialInsuranceType>();
+        private readonly HashSet<ISpecialInsuranceType> SpecialInsurances = new HashSet<ISpecialInsuranceType>();
+        private HashSet<ProductTypeDto> productTypeSurcharges = new HashSet<ProductTypeDto>();
+        private readonly FileStorageHelper fileStorageHelper = new FileStorageHelper(Constants.SurchargeProductTypesStorageFilePath);
 
         public BusinessRules()
         {
             productTypes.Clear();
             SpecialInsurances.Clear();
+
+            this.LoadProductTypeSurcharges();
         }
 
         public async Task<float> CalculateInsuranceAsync(int id, string productApi)
@@ -49,6 +54,22 @@ namespace Insurance.Api
 
                 return productTypeInsureCost + salePriceInsureCost;
             });
+        }
+
+        public async Task<ProductTypeDto> AddProductTypeAsync(AddProductTypeRequest request)
+        {
+            ProductTypeDto productType = new ProductTypeDto
+            {
+                Id = request.Id,
+                Name = request.Name,
+                Surcharge = request.Surcharge,
+                HasInsurance = request.HasInsurance
+            };
+
+            productTypeSurcharges.Add(productType);
+            fileStorageHelper.Save(productTypeSurcharges);
+
+            return productType;
         }
 
         public async Task<float> CalculateInsuranceForOrderAsync(OrderDto order, string productApi)
@@ -144,6 +165,17 @@ namespace Insurance.Api
             if (productType.Category == ProductCategory.DigitalCameras)
             {
                 SpecialInsurances.Add(new DigitalCameraSpecialInsurance());
+            }
+        }
+
+        private void LoadProductTypeSurcharges()
+        {
+            productTypeSurcharges.Clear();
+            HashSet<ProductTypeDto> result = fileStorageHelper.Read<HashSet<ProductTypeDto>>();
+
+            if (result != null)
+            {
+                productTypeSurcharges = result;
             }
         }
     }

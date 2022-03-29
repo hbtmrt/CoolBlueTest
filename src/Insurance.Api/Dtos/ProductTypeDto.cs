@@ -12,6 +12,9 @@ namespace Insurance.Api.Dtos
         [JsonProperty("canBeInsured")]
         public bool HasInsurance { get; set; }
 
+        public float Surcharge { get; set; }
+
+        [JsonIgnore]
         public ProductCategory Category => GetProductCategory();
 
         private ProductCategory GetProductCategory()

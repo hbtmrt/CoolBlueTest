@@ -12,24 +12,21 @@ namespace Insurance.Api.Helpers
         public FileStorageHelper(string filePath)
         {
             this.filePath = filePath;
-
-            cacheLock.ExitReadLock();
         }
 
         public T Read<T>()
         {
             cacheLock.EnterReadLock();
-            T value = default;
 
             if (File.Exists(filePath))
             {
                 string jsonString = File.ReadAllText(filePath);
-                value = JsonSerializer.Deserialize<T>(jsonString);
+                cacheLock.ExitReadLock();
+                return JsonSerializer.Deserialize<T>(jsonString);
             }
 
             cacheLock.ExitReadLock();
-
-            return value;
+            return default;
         }
 
         public void Save<T>(T obj)

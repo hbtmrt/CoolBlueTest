@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AddProductTypeRequestReceived" xml:space="preserve">
+    <value>"Add product type request received."</value>
+  </data>
   <data name="ApiNotFound" xml:space="preserve">
     <value>"The insurance API cannot be found."</value>
   </data>
@@ -126,11 +129,17 @@
   <data name="CalculateInsuranceRequestReceived" xml:space="preserve">
     <value>"Received request to calculate insurance for the product id: {0}"</value>
   </data>
+  <data name="ErrorOnAddingProductType" xml:space="preserve">
+    <value>"Error on adding product type."</value>
+  </data>
   <data name="InsureCostText" xml:space="preserve">
     <value>"The insure cost is {0}"</value>
   </data>
   <data name="ProductNotFound" xml:space="preserve">
     <value>"The product cannot found for the id: {0}"</value>
+  </data>
+  <data name="ProductTypeAddedSuccessfully" xml:space="preserve">
+    <value>"The product type has been added successfully."</value>
   </data>
   <data name="ProductTypeNotFound" xml:space="preserve">
     <value>"The product type cannot found for the product id: {0}"</value>
