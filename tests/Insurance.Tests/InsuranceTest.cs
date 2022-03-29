@@ -14,13 +14,15 @@ namespace Insurance.Tests
     {
         private readonly ControllerTestFixture _fixture;
         private readonly IConfiguration _configuration;
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<ProductsController> productsLogger;
+        private readonly ILogger<OrdersController> ordersLogger;
 
         public InsuranceTests(ControllerTestFixture fixture)
         {
             _fixture = fixture;
             _configuration = CreateConfiguration();
-            _logger = CreateMockLogger();
+            productsLogger = CreateMockLogger<ProductsController>();
+            ordersLogger = CreateMockLogger<OrdersController>();
         }
 
         [Fact]
@@ -28,7 +30,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 500;
 
-            HomeController homeController = new HomeController(_configuration, _logger);
+            ProductsController homeController = new ProductsController(_configuration, productsLogger);
 
             float insurance = homeController.CalculateInsuranceAsync(1).Result;
 
@@ -43,7 +45,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 1000;
 
-            HomeController homeController = new HomeController(_configuration, _logger);
+            ProductsController homeController = new ProductsController(_configuration, productsLogger);
 
             float insurance = homeController.CalculateInsuranceAsync(2).Result;
 
@@ -58,7 +60,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 2000;
 
-            HomeController homeController = new HomeController(_configuration, _logger);
+            ProductsController homeController = new ProductsController(_configuration, productsLogger);
 
             float insurance = homeController.CalculateInsuranceAsync(3).Result;
 
@@ -73,7 +75,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 1000;
 
-            HomeController homeController = new HomeController(_configuration, _logger);
+            ProductsController homeController = new ProductsController(_configuration, productsLogger);
 
             float insurance = homeController.CalculateInsuranceAsync(4).Result;
 
@@ -88,7 +90,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 1500;
 
-            HomeController homeController = new HomeController(_configuration, _logger);
+            ProductsController homeController = new ProductsController(_configuration, productsLogger);
 
             float insurance = homeController.CalculateInsuranceAsync(5).Result;
 
@@ -103,7 +105,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 2500;
 
-            HomeController homeController = new HomeController(_configuration, _logger);
+            ProductsController homeController = new ProductsController(_configuration, productsLogger);
 
             float insurance = homeController.CalculateInsuranceAsync(6).Result;
 
@@ -118,7 +120,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 3000;
 
-            HomeController homeController = new HomeController(_configuration, _logger);
+            OrdersController homeController = new OrdersController(_configuration, ordersLogger);
 
             var order = new OrderDto()
             {
@@ -139,12 +141,12 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = -1;
 
-            HomeController homeController = new HomeController(_configuration, _logger);
+            OrdersController homeController = new OrdersController(_configuration, ordersLogger);
 
             var order = new OrderDto()
             {
                 Id = 1,
-                ProductIds = new List<int> ()
+                ProductIds = new List<int>()
             };
 
             float insurance = homeController.CalculateInsuranceForOrderAsync(order.Id, order).Result;
@@ -160,7 +162,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = -1;
 
-            HomeController homeController = new HomeController(_configuration, _logger);
+            ProductsController homeController = new ProductsController(_configuration, productsLogger);
 
             float insurance = homeController.CalculateInsuranceAsync(1000).Result;
 
@@ -175,7 +177,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = -1;
 
-            HomeController homeController = new HomeController(_configuration, _logger);
+            ProductsController homeController = new ProductsController(_configuration, productsLogger);
 
             float insurance = homeController.CalculateInsuranceAsync(1000).Result;
 
@@ -190,7 +192,7 @@ namespace Insurance.Tests
         {
             const float expectedInsuranceValue = 4000;
 
-            HomeController homeController = new HomeController(_configuration, _logger);
+            OrdersController homeController = new OrdersController(_configuration, ordersLogger);
 
             var order = new OrderDto()
             {
@@ -206,7 +208,7 @@ namespace Insurance.Tests
             );
         }
 
-        private ILogger<HomeController> CreateMockLogger()
+        private ILogger<T> CreateMockLogger<T>()
         {
             XmlConfigurator.Configure(new FileInfo("log4net.config"));
             ServiceProvider serviceProvider = new ServiceCollection()
@@ -215,7 +217,7 @@ namespace Insurance.Tests
 
             ILoggerFactory factory = serviceProvider.GetService<ILoggerFactory>();
 
-            return factory.CreateLogger<HomeController>();
+            return factory.CreateLogger<T>();
         }
 
         private IConfiguration CreateConfiguration()
