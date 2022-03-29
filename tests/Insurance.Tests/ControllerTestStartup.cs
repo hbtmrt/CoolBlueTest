@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -21,6 +22,7 @@ namespace Insurance.Tests
                 GenerateSaleBelow500AndTypeOfLaptop(),
                 GenerateSaleBetween500and2000AndTypeOfSmartphone(),
                 GenerateSaleAbove2000AndTypeOfLaptop(),
+                GenerateWithInvalidProductType(),
             };
 
             return products;
@@ -88,6 +90,17 @@ namespace Insurance.Tests
                 id = 6,
                 name = "Test Product above 2000 and type of laptop",
                 productTypeId = 2,
+                salesPrice = 4456
+            };
+        }
+
+        private dynamic GenerateWithInvalidProductType()
+        {
+            return new
+            {
+                id = 7,
+                name = "Test Product with invalid product type",
+                productTypeId = 1000,
                 salesPrice = 4456
             };
         }

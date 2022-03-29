@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Insurance.Api.Dtos;
 using Insurance.Api.Resources;
@@ -38,6 +39,13 @@ namespace Insurance.Api.Controllers
                 logger.LogInformation(string.Format(Resource.InsureCostText, insureCost));
                 return insureCost;
             }
+            catch (ProductNotFoundException ex)
+            {
+                string message = string.Format(Resource.ProductNotFound, id, ex.Message);
+                logger.LogError(message);
+
+                return unsuccessfulResult;
+            }
             catch (ProductTypeNotFoundException ex)
             {
                 string message = string.Format(Resource.ProductTypeNotFound, id, ex.Message);
@@ -59,7 +67,7 @@ namespace Insurance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<float> CalculateInsuranceForOrderAsync(int id, [FromBody] OrderDto order)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || order.ProductIds == null || !order.ProductIds.Any())
             {
                 return unsuccessfulResult;
             }

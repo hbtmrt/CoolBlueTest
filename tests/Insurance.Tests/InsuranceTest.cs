@@ -26,7 +26,6 @@ namespace Insurance.Tests
         [Fact]
         public void CalculateInsurance_GivenSalesPriceLessThan500Euros_ShouldAdd500EurosToInsuranceCost()
         {
-            _logger.LogInformation($"Test test");
             const float expectedInsuranceValue = 500;
 
             HomeController homeController = new HomeController(_configuration, _logger);
@@ -128,6 +127,57 @@ namespace Insurance.Tests
             };
 
             float insurance = homeController.CalculateInsuranceForOrderAsync(order.Id, order).Result;
+
+            Assert.Equal(
+                expected: expectedInsuranceValue,
+                actual: insurance
+            );
+        }
+
+        [Fact]
+        public void CalculateInsuranceForOder_InvalidRequest_ShouldReturnMinusOne()
+        {
+            const float expectedInsuranceValue = -1;
+
+            HomeController homeController = new HomeController(_configuration, _logger);
+
+            var order = new OrderDto()
+            {
+                Id = 1,
+                ProductIds = new List<int> ()
+            };
+
+            float insurance = homeController.CalculateInsuranceForOrderAsync(order.Id, order).Result;
+
+            Assert.Equal(
+                expected: expectedInsuranceValue,
+                actual: insurance
+            );
+        }
+
+        [Fact]
+        public void CalculateInsurance_GivenInvalidProductId_ShouldReturnMinuesOne()
+        {
+            const float expectedInsuranceValue = -1;
+
+            HomeController homeController = new HomeController(_configuration, _logger);
+
+            float insurance = homeController.CalculateInsuranceAsync(1000).Result;
+
+            Assert.Equal(
+                expected: expectedInsuranceValue,
+                actual: insurance
+            );
+        }
+
+        [Fact]
+        public void CalculateInsurance_GivenInvalidProductTypeId_ShouldReturnMinuesOne()
+        {
+            const float expectedInsuranceValue = -1;
+
+            HomeController homeController = new HomeController(_configuration, _logger);
+
+            float insurance = homeController.CalculateInsuranceAsync(1000).Result;
 
             Assert.Equal(
                 expected: expectedInsuranceValue,

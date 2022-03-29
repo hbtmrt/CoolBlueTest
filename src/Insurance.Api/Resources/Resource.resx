@@ -129,7 +129,10 @@
   <data name="InsureCostText" xml:space="preserve">
     <value>"The insure cost is {0}"</value>
   </data>
+  <data name="ProductNotFound" xml:space="preserve">
+    <value>"The product cannot found for the id: {0}"</value>
+  </data>
   <data name="ProductTypeNotFound" xml:space="preserve">
-    <value>"Received request to calculate insurance for the order id: {0}"</value>
+    <value>"The product type cannot found for the product id: {0}"</value>
   </data>
 </root>

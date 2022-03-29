@@ -78,6 +78,11 @@ namespace Insurance.Api
                 LoadProductTypes(httpClientWrapper);
                 var product = httpClientWrapper.Get<dynamic>(string.Format(Constants.ApiPath.Product, productID));
 
+                if (product == null)
+                {
+                    throw new ProductNotFoundException();
+                }
+
                 int productTypeId = product.productTypeId;
                 try
                 {
