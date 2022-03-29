@@ -3,7 +3,8 @@
     public enum ProductCategory
     {
         Other,
-        Laptops,
-        Smartphones
+        Laptops =2,
+        Smartphones=3,
+        DigitalCameras = 4
     }
 }

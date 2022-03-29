@@ -23,6 +23,7 @@ namespace Insurance.Api.Dtos
             {
                 Constants.ProductTypeName.Laptops => ProductCategory.Laptops,
                 Constants.ProductTypeName.Smartphones => ProductCategory.Smartphones,
+                Constants.ProductTypeName.DigitalCameras => ProductCategory.DigitalCameras,
                 _ => ProductCategory.Other
             };
         }

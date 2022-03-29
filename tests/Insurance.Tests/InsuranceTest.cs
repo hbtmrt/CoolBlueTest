@@ -185,6 +185,27 @@ namespace Insurance.Tests
             );
         }
 
+        [Fact]
+        public void CalculateInsuranceForOder_GivenProductTypeIsDigitalCameras_ShouldAdd4000EurosToInsuranceCost()
+        {
+            const float expectedInsuranceValue = 4000;
+
+            HomeController homeController = new HomeController(_configuration, _logger);
+
+            var order = new OrderDto()
+            {
+                Id = 1,
+                ProductIds = new List<int> { 1, 2, 8 }
+            };
+
+            float insurance = homeController.CalculateInsuranceForOrderAsync(order.Id, order).Result;
+
+            Assert.Equal(
+                expected: expectedInsuranceValue,
+                actual: insurance
+            );
+        }
+
         private ILogger<HomeController> CreateMockLogger()
         {
             XmlConfigurator.Configure(new FileInfo("log4net.config"));

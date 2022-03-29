@@ -14,6 +14,7 @@
         {
             public const string Laptops = "Laptops";
             public const string Smartphones = "Smartphones";
+            public const string DigitalCameras = "DigitalCameras";
         }
 
         public static class InsureCost
@@ -30,6 +31,11 @@
                 public const float Lower = 500;
                 public const float Mid = 1000;
                 public const float High = 2000;
+            }
+
+            public static class SpecialInsurance
+            {
+                public const float DigitalCameras = 500;
             }
         }
 

@@ -23,10 +23,13 @@ namespace Insurance.Tests
                 GenerateSaleBetween500and2000AndTypeOfSmartphone(),
                 GenerateSaleAbove2000AndTypeOfLaptop(),
                 GenerateWithInvalidProductType(),
+                GenerateWithDigitalCameraProductType(),
             };
 
             return products;
         }
+
+
 
         private dynamic GenerateSaleBelow500()
         {
@@ -105,6 +108,17 @@ namespace Insurance.Tests
             };
         }
 
+        private dynamic GenerateWithDigitalCameraProductType()
+        {
+            return new
+            {
+                id = 8,
+                name = "Test Product with digital camera product type.",
+                productTypeId = 4,
+                salesPrice = 4456
+            };
+        }
+
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddLog4Net("log4net.config");
@@ -143,6 +157,12 @@ namespace Insurance.Tests
                                                    {
                                                        id = 3,
                                                        name = "Smartphones",
+                                                       canBeInsured = true
+                                                   },
+                                                   new
+                                                   {
+                                                       id = 4,
+                                                       name = "DigitalCameras",
                                                        canBeInsured = true
                                                    }
                                                };
