@@ -13,17 +13,27 @@ namespace Insurance.Api.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
+        #region Declarations
+
         private readonly IConfiguration configuration;
         private readonly ILogger<ProductsController> logger;
         private const float unsuccessfulResult = -1;
 
+        #endregion Declarations
+
+        #region Constructor
+
         public ProductsController(
-           IConfiguration configuration,
-           ILogger<ProductsController> logger)
+          IConfiguration configuration,
+          ILogger<ProductsController> logger)
         {
             this.configuration = configuration;
             this.logger = logger;
         }
+
+        #endregion Constructor
+
+        #region Methods
 
         [HttpGet("{id}/insurance")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(float))]
@@ -61,5 +71,7 @@ namespace Insurance.Api.Controllers
                 return unsuccessfulResult;
             }
         }
+
+        #endregion Methods
     }
 }

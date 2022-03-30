@@ -12,13 +12,23 @@ namespace Insurance.Api.Controllers
     [ApiController]
     public class ProductTypesController : ControllerBase
     {
+        #region Declarations
+
         private readonly ILogger<ProductTypesController> logger;
+
+        #endregion Declarations
+
+        #region Constructor
 
         public ProductTypesController(
            ILogger<ProductTypesController> logger)
         {
             this.logger = logger;
         }
+
+        #endregion Constructor
+
+        #region Methods
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductTypeDto))]
@@ -45,5 +55,7 @@ namespace Insurance.Api.Controllers
                 return BadRequest(ex);
             }
         }
+
+        #endregion Methods
     }
 }

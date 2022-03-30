@@ -13,11 +13,17 @@ namespace Insurance.Tests
 {
     public class InsuranceTests : IClassFixture<ControllerTestFixture>
     {
+        #region Declarations
+
         private readonly ControllerTestFixture _fixture;
         private readonly IConfiguration _configuration;
         private readonly ILogger<ProductsController> productsLogger;
         private readonly ILogger<OrdersController> ordersLogger;
         private readonly ILogger<ProductTypesController> productTypesLogger;
+
+        #endregion Declarations
+
+        #region Constructor
 
         public InsuranceTests(ControllerTestFixture fixture)
         {
@@ -27,6 +33,12 @@ namespace Insurance.Tests
             ordersLogger = CreateMockLogger<OrdersController>();
             productTypesLogger = CreateMockLogger<ProductTypesController>();
         }
+
+        #endregion Constructor
+
+        #region Methods
+
+        #region Methods - Test cases
 
         [Fact]
         public void CalculateInsurance_GivenSalesPriceLessThan500Euros_ShouldAdd500EurosToInsuranceCost()
@@ -258,6 +270,10 @@ namespace Insurance.Tests
             );
         }
 
+        #endregion Methods - Test cases
+
+        #region Methods - Helpers
+
         private ILogger<T> CreateMockLogger<T>()
         {
             XmlConfigurator.Configure(new FileInfo("log4net.config"));
@@ -279,5 +295,9 @@ namespace Insurance.Tests
 
             return configuration;
         }
+
+        #endregion Methods - Helpers
+
+        #endregion Methods
     }
 }

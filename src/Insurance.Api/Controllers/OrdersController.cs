@@ -15,9 +15,15 @@ namespace Insurance.Api.Controllers
     [ApiController]
     public class OrdersController : ControllerBase
     {
+        #region Declarations
+
         private readonly IConfiguration configuration;
         private readonly ILogger<OrdersController> logger;
         private const float unsuccessfulResult = -1;
+
+        #endregion Declarations
+
+        #region Constructor
 
         public OrdersController(
            IConfiguration configuration,
@@ -26,6 +32,10 @@ namespace Insurance.Api.Controllers
             this.configuration = configuration;
             this.logger = logger;
         }
+
+        #endregion Constructor
+
+        #region Methods
 
         [HttpPost("{id}/insurance")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(float))]
@@ -62,5 +72,7 @@ namespace Insurance.Api.Controllers
                 return unsuccessfulResult;
             }
         }
+
+        #endregion Methods
     }
 }

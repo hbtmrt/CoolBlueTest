@@ -17,11 +17,17 @@ namespace Insurance.Api
 {
     public sealed class BusinessRules
     {
+        #region Declarations
+
         private readonly HashSet<ProductTypeDto> productTypes = new HashSet<ProductTypeDto>();
         private readonly object syncObject = new object();
         private readonly HashSet<ISpecialInsuranceType> SpecialInsurances = new HashSet<ISpecialInsuranceType>();
         private List<ProductTypeDto> productTypeSurcharges = new List<ProductTypeDto>();
         private readonly FileStorageHelper fileStorageHelper = new FileStorageHelper(Constants.SurchargeProductTypesStorageFilePath);
+
+        #endregion Declarations
+
+        #region Constructor
 
         public BusinessRules()
         {
@@ -30,6 +36,12 @@ namespace Insurance.Api
 
             this.LoadProductTypeSurcharges();
         }
+
+        #endregion Constructor
+
+        #region Methods
+
+        #region Methods - Instance Methods
 
         public async Task<float> CalculateInsuranceAsync(int id, string productApi)
         {
@@ -91,6 +103,10 @@ namespace Insurance.Api
             float[] productInsuranceList = await Task.WhenAll(tasks);
             return productInsuranceList.Sum() + CalculateSpecialInsurances();
         }
+
+        #endregion Methods - Instance Methods
+
+        #region Methods - Helpers
 
         private float CalculateSpecialInsurances()
         {
@@ -194,5 +210,9 @@ namespace Insurance.Api
 
             return 0;
         }
+
+        #endregion Methods - Helpers
+
+        #endregion Methods
     }
 }
