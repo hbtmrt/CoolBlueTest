@@ -24,6 +24,7 @@
 - Renamed some unreadable variables.
 - Renamed 'UnitTest1' class to 'InsuranceTest'
 - Removed unwanted imports.
+- Added log4net
 
 ### Task-3 Feature 1: Calculate insurance cost for an order.
 - Added a new 'Controller' called 'OrdersController' and added a new endpoint.
